@@ -30,6 +30,7 @@
 - **Infra:** Testcontainers para DB, Redis, Kafka em testes reais
 - Seguir padrão AAA (Arrange, Act, Assert)
 - Cobrir: happy path, validações, 404, 401/403, rollback de transação
+- Só implementar teste quando for solicitado.
 
 ## 🤖 Instruções para a IA
 1. Gere código compatível com **Spring Boot 3+** (`jakarta.persistence`, etc.)
