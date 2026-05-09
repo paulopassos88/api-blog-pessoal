@@ -1,3 +1,15 @@
 spring:
+  profiles:
+    active: dev
   application:
     name: api-blog-pessoal
+
+  # Configurações globais do Flyway
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  # Configurações globais do Jackson para datas
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: America/Sao_Paulo
