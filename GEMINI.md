@@ -32,6 +32,14 @@
 - Cobrir: happy path, validações, 404, 401/403, rollback de transação
 - Só implementar teste quando for solicitado. 
 
+## 🛡️ Decisões Arquiteturais
+### Autenticação & Autorização: Spring Security + JWT
+Optamos pelo **Spring Security + JWT** em vez do Keycloak pelos seguintes motivos:
+- **Eficiência de Recursos:** Ideal para deploy em VPS com hardware limitado (baixo consumo de RAM comparado ao Keycloak).
+- **Simplicidade de Infraestrutura:** Menor complexidade de deploy, mantendo toda a lógica de segurança dentro do JAR da aplicação.
+- **Controle Total:** Facilita a integração direta com a entidade `Usuario` já existente e customização de regras de negócio específicas do blog.
+- **Frontend-Ready:** Suporte nativo a CORS e autenticação stateless, perfeita para consumo por SPAs (React/Angular/Vue).
+
 ## 🤖 Instruções para a IA
 1. Gere código compatível com **Spring Boot 3+** (`jakarta.persistence`, etc.)
 2. Prefira soluções nativas do Spring antes de bibliotecas externas
