@@ -2,6 +2,7 @@ package br.com.passos.api_blog_pessoal.controller;
 
 import br.com.passos.api_blog_pessoal.dto.UsuarioRequest;
 import br.com.passos.api_blog_pessoal.dto.UsuarioResponse;
+import br.com.passos.api_blog_pessoal.dto.UsuarioUpdateRequest;
 import br.com.passos.api_blog_pessoal.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,21 @@ public class UsuarioController {
     @GetMapping("/busca-por-nome")
     public ResponseEntity<List<UsuarioResponse>> buscarPorNome(@RequestParam String nome) {
         return ResponseEntity.ok(service.buscarPorNome(nome));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponse> atualizar(
+            @PathVariable Long id,
+            @RequestParam Long executorId,
+            @RequestBody @Valid UsuarioUpdateRequest request) {
+        return ResponseEntity.ok(service.atualizar(id, executorId, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(
+            @PathVariable Long id,
+            @RequestParam Long executorId) {
+        service.excluir(id, executorId);
+        return ResponseEntity.noContent().build();
     }
 }
