@@ -168,4 +168,63 @@ class PostServiceTest {
             service.buscarPorId(1L);
         });
     }
+
+    @Test
+    @DisplayName("Deve atualizar um post com sucesso")
+    void deveAtualizarPostComSucesso() {
+        // Arrange
+        when(repository.findById(1L)).thenReturn(Optional.of(post));
+        when(repository.save(any(Post.class))).thenReturn(post);
+        when(mapper.toResponse(post)).thenReturn(postResponse);
+
+        // Act
+        PostResponse response = service.atualizar(1L, 1L, postRequest);
+
+        // Assert
+        assertNotNull(response);
+        verify(repository, times(1)).save(any(Post.class));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao atualizar post de outro autor")
+    void deveLancarExcecaoAoAtualizarPostDeOutroAutor() {
+        // Arrange
+        when(repository.findById(1L)).thenReturn(Optional.of(post));
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            service.atualizar(1L, 2L, postRequest);
+        });
+
+        assertEquals("Você não tem permissão para realizar esta operação", exception.getMessage());
+        verify(repository, never()).save(any(Post.class));
+    }
+
+    @Test
+    @DisplayName("Deve excluir um post com sucesso")
+    void deveExcluirPostComSucesso() {
+        // Arrange
+        when(repository.findById(1L)).thenReturn(Optional.of(post));
+
+        // Act
+        service.excluir(1L, 1L);
+
+        // Assert
+        verify(repository, times(1)).delete(post);
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao excluir post de outro autor")
+    void deveLancarExcecaoAoExcluirPostDeOutroAutor() {
+        // Arrange
+        when(repository.findById(1L)).thenReturn(Optional.of(post));
+
+        // Act & Assert
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            service.excluir(1L, 2L);
+        });
+
+        assertEquals("Você não tem permissão para realizar esta operação", exception.getMessage());
+        verify(repository, never()).delete(any(Post.class));
+    }
 }

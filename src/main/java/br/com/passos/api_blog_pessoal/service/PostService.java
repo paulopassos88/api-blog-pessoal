@@ -52,4 +52,38 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException("Postagem não encontrada"));
         return mapper.toResponse(post);
     }
+
+    @Transactional
+    public PostResponse atualizar(Long postId, Long autorId, PostRequest request) {
+        Post post = buscarPostPorId(postId);
+        validarPropriedadePost(post, autorId);
+
+        post.setTitulo(request.titulo());
+        post.setConteudo(request.conteudo());
+
+        return mapper.toResponse(repository.save(post));
+    }
+
+    @Transactional
+    public void excluir(Long postId, Long autorId) {
+        Post post = buscarPostPorId(postId);
+        validarPropriedadePost(post, autorId);
+
+        repository.delete(post);
+    }
+
+    private Post buscarPostPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new BusinessException("Postagem não encontrada"));
+    }
+
+    private void validarPropriedadePost(Post post, Long autorId) {
+        if (!post.getAutor().getId().equals(autorId)) {
+            throw new BusinessException("Você não tem permissão para realizar esta operação");
+        }
+
+        if (post.getAutor().getRole() != Role.USER) {
+            throw new BusinessException("Apenas usuários comuns podem gerenciar suas postagens");
+        }
+    }
 }

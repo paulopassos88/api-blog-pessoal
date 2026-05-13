@@ -33,4 +33,15 @@ public class PostController {
     public ResponseEntity<PostResponse> buscar(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PostResponse> atualizar(@PathVariable Long id, @RequestParam Long autorId, @RequestBody @Valid PostRequest request) {
+        return ResponseEntity.ok(service.atualizar(id, autorId, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id, @RequestParam Long autorId) {
+        service.excluir(id, autorId);
+        return ResponseEntity.noContent().build();
+    }
 }
