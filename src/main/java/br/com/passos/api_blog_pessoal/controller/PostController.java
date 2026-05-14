@@ -1,10 +1,12 @@
 package br.com.passos.api_blog_pessoal.controller;
 
+import br.com.passos.api_blog_pessoal.dto.PostFeedResponse;
 import br.com.passos.api_blog_pessoal.dto.PostRequest;
 import br.com.passos.api_blog_pessoal.dto.PostResponse;
 import br.com.passos.api_blog_pessoal.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,13 @@ public class PostController {
     public ResponseEntity<PostResponse> criar(@RequestParam Long autorId, @RequestBody @Valid PostRequest request) {
         // Nota: O autorId virá do contexto de segurança no futuro
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(autorId, request));
+    }
+
+    @GetMapping("/feed")
+    public ResponseEntity<Slice<PostFeedResponse>> listarFeed(
+            @RequestParam(required = false) Long lastId,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(service.listarFeed(lastId, size));
     }
 
     @GetMapping

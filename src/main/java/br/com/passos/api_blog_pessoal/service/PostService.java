@@ -1,5 +1,6 @@
 package br.com.passos.api_blog_pessoal.service;
 
+import br.com.passos.api_blog_pessoal.dto.PostFeedResponse;
 import br.com.passos.api_blog_pessoal.dto.PostRequest;
 import br.com.passos.api_blog_pessoal.dto.PostResponse;
 import br.com.passos.api_blog_pessoal.exception.BusinessException;
@@ -11,6 +12,8 @@ import br.com.passos.api_blog_pessoal.repository.PostRepository;
 import br.com.passos.api_blog_pessoal.repository.UsuarioRepository;
 import br.com.passos.api_blog_pessoal.service.validation.ValidadorCriacaoPost;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +54,11 @@ public class PostService {
         Post post = repository.findById(id)
                 .orElseThrow(() -> new BusinessException("Postagem não encontrada"));
         return mapper.toResponse(post);
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<PostFeedResponse> listarFeed(Long lastId, int size) {
+        return repository.findFeed(lastId, PageRequest.of(0, size));
     }
 
     @Transactional
