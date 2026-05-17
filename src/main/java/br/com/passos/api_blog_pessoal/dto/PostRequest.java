@@ -9,6 +9,10 @@ public record PostRequest(
     String titulo,
 
     @NotBlank(message = "O conteúdo é obrigatório")
-    String conteudo
+    String conteudo,
+
+    Long categoriaId,
+
+    java.util.List<String> tags
 ) {
 }

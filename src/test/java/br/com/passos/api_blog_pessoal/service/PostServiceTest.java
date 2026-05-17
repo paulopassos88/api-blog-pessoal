@@ -37,6 +37,12 @@ class PostServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
+    private CategoriaService categoriaService;
+
+    @Mock
+    private TagService tagService;
+
+    @Mock
     private PostMapper mapper;
 
     @Mock
@@ -56,7 +62,7 @@ class PostServiceTest {
     void setUp() {
         // Inicializa a lista de validadores manualmente para o Mockito InjectMocks
         validadores = Collections.singletonList(validador);
-        service = new PostService(repository, usuarioRepository, mapper, validadores);
+        service = new PostService(repository, usuarioRepository, categoriaService, tagService, mapper, validadores);
 
         autor = Usuario.builder()
                 .id(1L)
@@ -65,16 +71,17 @@ class PostServiceTest {
                 .role(Role.USER)
                 .build();
 
-        postRequest = new PostRequest("Título Teste", "Conteúdo Teste");
+        postRequest = new PostRequest("Título Teste", "Conteúdo Teste", null, null);
 
         post = Post.builder()
                 .id(1L)
                 .titulo("Título Teste")
+                .slug("titulo-teste")
                 .conteudo("Conteúdo Teste")
                 .autor(autor)
                 .build();
 
-        postResponse = new PostResponse(1L, "Título Teste", "Conteúdo Teste", "Autor Teste", LocalDateTime.now());
+        postResponse = new PostResponse(1L, "Título Teste", "titulo-teste", "Conteúdo Teste", "Autor Teste", null, null, LocalDateTime.now());
     }
 
     @Test

@@ -43,6 +43,20 @@ public class PostController {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<PostResponse> buscarPorSlug(@PathVariable String slug) {
+        return ResponseEntity.ok(service.buscarPorSlug(slug));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<PostResponse>> pesquisar(
+            @RequestParam(required = false) String titulo,
+            @RequestParam(required = false) String conteudo,
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String tag) {
+        return ResponseEntity.ok(service.pesquisar(titulo, conteudo, categoria, tag));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> atualizar(@PathVariable Long id, @RequestParam Long autorId, @RequestBody @Valid PostRequest request) {
         return ResponseEntity.ok(service.atualizar(id, autorId, request));

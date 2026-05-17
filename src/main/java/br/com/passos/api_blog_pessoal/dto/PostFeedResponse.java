@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public record PostFeedResponse(
     Long id,
     String titulo,
+    String slug,
     String resumo,
     String nomeAutor,
     LocalDateTime dataCriacao,

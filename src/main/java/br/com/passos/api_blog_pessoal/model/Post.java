@@ -27,6 +27,11 @@ public class Post extends BaseEntity {
     private String titulo;
 
     @NotBlank
+    @Size(min = 5, max = 160)
+    @Column(unique = true)
+    private String slug;
+
+    @NotBlank
     @Column(columnDefinition = "TEXT")
     private String conteudo;
 
@@ -34,6 +39,19 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autor_id", nullable = false)
     private Usuario autor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
+    @ManyToMany
+    @JoinTable(
+        name = "posts_tags",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    @Builder.Default
+    private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

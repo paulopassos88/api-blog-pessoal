@@ -7,11 +7,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", 
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {CategoriaMapper.class, TagMapper.class})
 public interface PostMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "autor", ignore = true)
+    @Mapping(target = "slug", ignore = true)
+    @Mapping(target = "categoria", ignore = true)
+    @Mapping(target = "tags", ignore = true)
     @Mapping(target = "comentarios", ignore = true)
     Post toEntity(PostRequest request);
 
