@@ -26,7 +26,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
                 SUBSTRING(p.conteudo, 1, 200), 
                 p.autor.nome, 
                 p.dataCriacao,
-                (SELECT COUNT(c) FROM Comentario c WHERE c.post.id = p.id)
+                (SELECT COUNT(c) FROM Comentario c WHERE c.post.id = p.id),
+                (SELECT COUNT(l) FROM p.curtidas l)
             )
             FROM Post p
             WHERE (:lastId IS NULL OR p.id < :lastId)

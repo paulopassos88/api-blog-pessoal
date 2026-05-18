@@ -16,5 +16,6 @@ public interface ComentarioMapper {
     Comentario toEntity(ComentarioRequest request);
 
     @Mapping(target = "nomeAutor", source = "autor.nome")
+    @Mapping(target = "totalCurtidas", expression = "java(comentario.getCurtidas().size())")
     ComentarioResponse toResponse(Comentario comentario);
 }

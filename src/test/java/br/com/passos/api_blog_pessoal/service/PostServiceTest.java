@@ -81,7 +81,7 @@ class PostServiceTest {
                 .autor(autor)
                 .build();
 
-        postResponse = new PostResponse(1L, "Título Teste", "titulo-teste", "Conteúdo Teste", "Autor Teste", null, null, LocalDateTime.now());
+        postResponse = new PostResponse(1L, "Título Teste", "titulo-teste", "Conteúdo Teste", "Autor Teste", null, null, 0, 1, LocalDateTime.now());
     }
 
     @Test
@@ -205,6 +205,37 @@ class PostServiceTest {
 
         assertEquals("Você não tem permissão para realizar esta operação", exception.getMessage());
         verify(repository, never()).save(any(Post.class));
+    }
+
+    @Test
+    @DisplayName("Deve curtir um post com sucesso")
+    void deveCurtirPostComSucesso() {
+        // Arrange
+        when(repository.findById(1L)).thenReturn(Optional.of(post));
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(autor));
+
+        // Act
+        service.curtir(1L, 1L);
+
+        // Assert
+        assertTrue(post.getCurtidas().contains(autor));
+        verify(repository, times(1)).save(post);
+    }
+
+    @Test
+    @DisplayName("Deve descurtir um post se já estiver curtido")
+    void deveDescurtirPostSeJaCurtido() {
+        // Arrange
+        post.getCurtidas().add(autor);
+        when(repository.findById(1L)).thenReturn(Optional.of(post));
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(autor));
+
+        // Act
+        service.curtir(1L, 1L);
+
+        // Assert
+        assertFalse(post.getCurtidas().contains(autor));
+        verify(repository, times(1)).save(post);
     }
 
     @Test

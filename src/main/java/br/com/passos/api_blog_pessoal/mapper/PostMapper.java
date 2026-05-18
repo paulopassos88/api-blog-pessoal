@@ -21,5 +21,14 @@ public interface PostMapper {
     Post toEntity(PostRequest request);
 
     @Mapping(target = "nomeAutor", source = "autor.nome")
+    @Mapping(target = "totalCurtidas", expression = "java(post.getCurtidas().size())")
+    @Mapping(target = "tempoLeitura", expression = "java(calcularTempoLeitura(post.getConteudo()))")
     PostResponse toResponse(Post post);
+
+    default int calcularTempoLeitura(String conteudo) {
+        if (conteudo == null || conteudo.isBlank()) return 0;
+        int palavrasPorMinuto = 200;
+        String[] palavras = conteudo.trim().split("\\s+");
+        return (int) Math.ceil((double) palavras.length / palavrasPorMinuto);
+    }
 }

@@ -13,6 +13,7 @@ public record PostFeedResponse(
     String resumo,
     String nomeAutor,
     LocalDateTime dataCriacao,
-    long quantidadeComentarios
+    long quantidadeComentarios,
+    long totalCurtidas
 ) {
 }

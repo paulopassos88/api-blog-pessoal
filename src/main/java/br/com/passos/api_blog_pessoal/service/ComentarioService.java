@@ -46,9 +46,45 @@ public class ComentarioService {
         return mapper.toResponse(repository.save(comentario));
     }
 
+    @Transactional
+    public ComentarioResponse responder(Long paiId, Long autorId, ComentarioRequest request) {
+        Comentario pai = repository.findById(paiId)
+                .orElseThrow(() -> new BusinessException("Comentário pai não encontrado"));
+
+        Usuario autor = usuarioRepository.findById(autorId)
+                .orElseThrow(() -> new BusinessException("Usuário não encontrado"));
+
+        validadores.forEach(v -> v.validar(autor, request));
+
+        Comentario resposta = mapper.toEntity(request);
+        resposta.setPost(pai.getPost());
+        resposta.setAutor(autor);
+        resposta.setPai(pai);
+
+        return mapper.toResponse(repository.save(resposta));
+    }
+
+    @Transactional
+    public void curtir(Long comentarioId, Long usuarioId) {
+        Comentario comentario = repository.findById(comentarioId)
+                .orElseThrow(() -> new BusinessException("Comentário não encontrado"));
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new BusinessException("Usuário não encontrado"));
+
+        if (comentario.getCurtidas().contains(usuario)) {
+            comentario.getCurtidas().remove(usuario);
+        } else {
+            comentario.getCurtidas().add(usuario);
+        }
+        repository.save(comentario);
+    }
+
     @Transactional(readOnly = true)
     public List<ComentarioResponse> listarPorPost(Long postId) {
+        // Retornar apenas comentários raiz para o feed de comentários
         return repository.findByPostId(postId).stream()
+                .filter(c -> c.getPai() == null)
                 .map(mapper::toResponse)
                 .collect(Collectors.toList());
     }

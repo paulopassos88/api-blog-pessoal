@@ -6,6 +6,8 @@ public record ComentarioResponse(
     Long id,
     String texto,
     String nomeAutor,
-    LocalDateTime dataCriacao
+    int totalCurtidas,
+    java.util.List<ComentarioResponse> respostas,
+    java.time.LocalDateTime dataCriacao
 ) {
 }

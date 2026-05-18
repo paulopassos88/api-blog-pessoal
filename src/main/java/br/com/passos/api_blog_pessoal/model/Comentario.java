@@ -31,4 +31,21 @@ public class Comentario extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pai_id")
+    private Comentario pai;
+
+    @OneToMany(mappedBy = "pai", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private java.util.List<Comentario> respostas = new java.util.ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "comentarios_curtidas",
+        joinColumns = @JoinColumn(name = "comentario_id"),
+        inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    @Builder.Default
+    private java.util.Set<Usuario> curtidas = new java.util.HashSet<>();
 }

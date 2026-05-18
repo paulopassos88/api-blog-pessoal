@@ -67,4 +67,10 @@ public class PostController {
         service.excluir(id, autorId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/curtir")
+    public ResponseEntity<Void> curtir(@PathVariable Long id, @RequestParam Long usuarioId) {
+        service.curtir(id, usuarioId);
+        return ResponseEntity.ok().build();
+    }
 }

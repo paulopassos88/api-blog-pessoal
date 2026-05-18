@@ -10,6 +10,8 @@ public record PostResponse(
     String nomeAutor,
     CategoriaResponse categoria,
     java.util.List<TagResponse> tags,
+    int totalCurtidas,
+    int tempoLeitura,
     java.time.LocalDateTime dataCriacao
 ) {
 }

@@ -120,6 +120,20 @@ public class PostService {
     }
 
     @Transactional
+    public void curtir(Long postId, Long usuarioId) {
+        Post post = buscarPostPorId(postId);
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new BusinessException("Usuário não encontrado"));
+
+        if (post.getCurtidas().contains(usuario)) {
+            post.getCurtidas().remove(usuario);
+        } else {
+            post.getCurtidas().add(usuario);
+        }
+        repository.save(post);
+    }
+
+    @Transactional
     public void excluir(Long postId, Long autorId) {
         Post post = buscarPostPorId(postId);
         validarPropriedadePost(post, autorId);

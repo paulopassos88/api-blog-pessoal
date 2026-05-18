@@ -56,4 +56,13 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Comentario> comentarios = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "posts_curtidas",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    @Builder.Default
+    private java.util.Set<Usuario> curtidas = new java.util.HashSet<>();
 }
