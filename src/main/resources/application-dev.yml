@@ -23,3 +23,9 @@ logging:
     br.com.passos: DEBUG
     org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
+
+management:
+  endpoint:
+    health:
+      show-details: always
+

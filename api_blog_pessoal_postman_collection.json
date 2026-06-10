@@ -1,0 +1,679 @@
+{
+	"info": {
+		"_postman_id": "b73a3809-e260-49bd-b0f3-cb2b8f8449c2",
+		"name": "API Blog Pessoal",
+		"description": "Coleção com todas as requisições HTTP da API Blog Pessoal contendo dados fictícios.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Usuários",
+			"item": [
+				{
+					"name": "Cadastrar Usuário",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"João Silva\",\n    \"email\": \"joao.silva@example.com\",\n    \"senha\": \"senhaSegura123\",\n    \"role\": \"USER\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/usuarios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Usuário por Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/usuarios/busca-por-email?email=joao.silva@example.com",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"usuarios",
+								"busca-por-email"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "joao.silva@example.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Usuários por Nome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/usuarios/busca-por-nome?nome=João",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"usuarios",
+								"busca-por-nome"
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": "João"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Usuário",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"João Silva Alterado\",\n    \"email\": \"joao.silva@example.com\",\n    \"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/usuarios/1?executorId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"usuarios",
+								"1"
+							],
+							"query": [
+								{
+									"key": "executorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Usuário",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/usuarios/1?executorId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"usuarios",
+								"1"
+							],
+							"query": [
+								{
+									"key": "executorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categorias",
+			"item": [
+				{
+					"name": "Criar Categoria",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Tecnologia\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/categorias",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categorias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Categorias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categorias",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categorias"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "Listar Tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/tags",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "Criar Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"titulo\": \"Introdução ao Spring Boot Actuator\",\n    \"conteudo\": \"Spring Boot Actuator traz recursos prontos para produção para nossa aplicação, permitindo monitorar o status do sistema através de endpoints.\",\n    \"categoriaId\": 1,\n    \"tags\": [\"Java\", \"Spring Boot\", \"Prometheus\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts?autorId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "autorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Feed de Posts (Paginado/Slice)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/feed?size=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"feed"
+							],
+							"query": [
+								{
+									"key": "lastId",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos os Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Post por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Post por Slug",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/slug/introducao-ao-spring-boot-actuator",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"slug",
+								"introducao-ao-spring-boot-actuator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pesquisar Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/search?titulo=Introdução&conteudo=Actuator&categoria=Tecnologia&tag=Java",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"search"
+							],
+							"query": [
+								{
+									"key": "titulo",
+									"value": "Introdução"
+								},
+								{
+									"key": "conteudo",
+									"value": "Actuator"
+								},
+								{
+									"key": "categoria",
+									"value": "Tecnologia"
+								},
+								{
+									"key": "tag",
+									"value": "Java"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Post",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"titulo\": \"Introdução ao Spring Boot Actuator (Atualizado)\",\n    \"conteudo\": \"Conteúdo atualizado do post com mais detalhes sobre telemetria e micrometer.\",\n    \"categoriaId\": 1,\n    \"tags\": [\"Java\", \"Spring Boot\", \"Prometheus\", \"Grafana\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/1?autorId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1"
+							],
+							"query": [
+								{
+									"key": "autorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/1?autorId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1"
+							],
+							"query": [
+								{
+									"key": "autorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Curtir Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/1/curtir?usuarioId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1",
+								"curtir"
+							],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comentários",
+			"item": [
+				{
+					"name": "Comentar em um Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"texto\": \"Excelente post explicativo!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/1/comentarios?autorId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1",
+								"comentarios"
+							],
+							"query": [
+								{
+									"key": "autorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Comentários de um Post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/1/comentarios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1",
+								"comentarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Responder Comentário",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"texto\": \"Muito obrigado pelo feedback!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/comentarios/1/respostas?autorId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"comentarios",
+								"1",
+								"respostas"
+							],
+							"query": [
+								{
+									"key": "autorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Curtir Comentário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/comentarios/1/curtir?usuarioId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"comentarios",
+								"1",
+								"curtir"
+							],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Actuator (Monitoramento)",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/actuator/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Prometheus Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/actuator/prometheus",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Info Endpoint",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/actuator/info",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"actuator",
+								"info"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
