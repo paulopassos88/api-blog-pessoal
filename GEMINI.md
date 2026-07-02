@@ -1,85 +1,102 @@
-## 🛠 Stack & Ambiente
+# 🪐 Skill Antigravity: Guia Unificado de Desenvolvimento
 
-- **Framework:** Spring Boot 3.2+ (Java 17 ou 21)
-- **Build:** Gradle (Kotlin DSL) / Maven (ajuste conforme seu projeto)
-- **Arquitetura:** Package-by-feature + Camadas (Controller → Service → Repository)
-- **Banco:** PostgreSQL + Spring Data JPA (Hibernate 6)
-- **API:** RESTful, JSON, OpenAPI 3.0 via SpringDoc
-- **Segurança:** Spring Security 6, JWT stateless, @PreAuthorize
-- **Testes:** JUnit 5, Mockito, Testcontainers, @SpringBootTest + MockMvc
+> **Versão:** 3.0 | **Foco:** Spring Boot 3+, Git Flow Seguro e Qualidade de Código.
+> Este documento consolida as diretrizes de arquitetura, fluxo de trabalho e regras de interação para a IA.
 
-## 📝 Convenções de Código e Qualidade
+---
 
-- Use **injeção por construtor** (`@RequiredArgsConstructor` do Lombok ou manual).
-- **Nunca** exponha `@Entity` no controller. Sempre mapeie para DTOs (`record` preferível).
-- Validação: `@Valid` no controller + `@NotBlank`, `@Email`, `@Size` nos DTOs.
-- Tratamento de erros: `@RestControllerAdvice` + `ErrorResponse` padronizado.
-- Entidades: `@Data`/`@Builder` com cuidado; prefira getters/setters explícitos se houver lógica.
-- Logging: `@Slf4j`, use JSON em produção, evite `System.out.println`.
-- Imports: **SEMPRE `jakarta.*`**, nunca `javax.*` (Spring Boot 3+).
-- Use os padrões **SOLID** para o desenvolvimento do código.
-- **Métricas e Complexidade:** Mantenha a Complexidade Ciclomática baixa. Evite aninhamentos profundos (máximo de 2 níveis de `if/for`), utilizando retornos antecipados (*Early Returns*).
-- **Code Smells e Duplicação:** Respeite o princípio DRY (*Don't Repeat Yourself*). Classes devem ter alta coesão e baixo acoplamento (delegando responsabilidades corretamente entre Controller, Service e Repository).
+## 🤖 1. Regras de Interação da IA (Obrigatório)
 
-## 🔒 Segurança & Boas Práticas
+1. **Autorização Prévia (Código e Testes):** 
+   - **NUNCA** escreva, altere ou exclua código de produção ou testes sem autorização explícita do usuário.
+   - Apresente propostas, explique o impacto na qualidade e aguarde o "de acordo".
+2. **Autorização Prévia (Git):** 
+   - **NUNCA** execute `git commit` ou `git push` sem autorização explícita.
+3. **Postura de Revisor:** 
+   - Ao ler código, avalie mentalmente Complexidade Ciclomática, Code Smells e SOLID. Sugira refatorações explicando o "porquê", mas aguarde aprovação para reescrever.
+4. **Cautela com Críticos:** 
+   - Pare e pergunte antes de modificar configurações de segurança (`SecurityFilterChain`) ou transações globais.
+5. **Testes:** 
+   - Só implemente testes se o usuário solicitar explicitamente.
+6. **Entregáveis:** 
+   - Sempre inclua imports, explique anotações novas e, ao sugerir migrações de banco, inclua scripts Flyway/Liquibase.
 
-- Secrets via variáveis de ambiente ou `application-{profile}.yml` (nunca commitar).
-- Spring Security: configurar via `@Bean SecurityFilterChain`, stateless para APIs.
-- Método-level security: `@EnableMethodSecurity` + `@PreAuthorize("hasRole('ADMIN')")`.
-- Validar headers, path variables e query params.
-- CORS explícito em `WebSecurityConfig` ou `@CrossOrigin` controlado.
+---
 
-## 🧪 Padrão de Testes
+## 🛠 2. Stack & Arquitetura
 
-- **Unitários:** Mockar repositórios, testar regras de negócio puras.
-- **Integração:** `@SpringBootTest` + `@AutoConfigureMockMvc` + `@Transactional` (rollback).
-- **Infra:** Testcontainers para DB, Redis, Kafka em testes reais.
-- Seguir padrão AAA (Arrange, Act, Assert).
-- Cobrir: happy path, validações, 404, 401/403, rollback de transação.
-- **Cobertura (Code Coverage):** Quando autorizado a criar testes, mire em cobrir todas as ramificações lógicas (*branch coverage*) dos métodos, preparando a base para relatórios de ferramentas como o **JaCoCo**.
-- Só implementar teste quando for solicitado explícitamente.
+- **Core:** Spring Boot 3.2+ (Java 17 ou 21). **Atenção:** Use sempre `jakarta.*`, nunca `javax.*`.
+- **Build:** Gradle (Kotlin DSL) ou Maven.
+- **Dados:** PostgreSQL + Spring Data JPA (Hibernate 6).
+- **API:** RESTful, JSON, OpenAPI 3.0 (SpringDoc).
+- **Segurança:** Spring Security 6 + JWT stateless. *(Decisão: Evita Keycloak para economizar RAM em VPS e manter controle total da entidade `Usuario`)*.
+- **Monitoramento:** Spring Boot Actuator integrado a Prometheus e Grafana.
 
-## 🛡️ Decisões Arquiteturais
+---
 
-### Autenticação & Autorização: Spring Security + JWT
+## 🌳 3. Git Flow & Versionamento
 
-Optamos pelo **Spring Security + JWT** em vez do Keycloak pelos seguintes motivos:
+### 🛑 A Regra de Ouro
+> **NUNCA faça commits diretos na `main` ou `master`.** Toda alteração chega via Pull Request (PR).
+> **Só fazer commits quando for solicitado.**
 
-- **Eficiência de Recursos:** Ideal para deploy em VPS com hardware limitado (baixo consumo de RAM comparado ao Keycloak).
-- **Simplicidade de Infraestrutura:** Menor complexidade de deploy, mantendo toda a lógica de segurança dentro do JAR da aplicação.
-- **Controle Total:** Facilita a integração direta com a entidade `Usuario` já existente e customização de regras de negócio específicas do blog.
-- **Frontend-Ready:** Suporte nativo a CORS e autenticação stateless, perfeita para consumo por SPAs (React/Angular/Vue).
+### Topologia Simplificada
+- `main`: Espelho da produção estável.
+- `develop`: Branch de integração contínua.
+- `feature/*` e `bugfix/*`: Nascem e morrem em `develop`.
+- `release/*`: Nasce em `develop`, merge para `main` e volta para `develop`.
+- `hotfix/*`: Nasce em `main`, merge para `main` (com TAG) e volta para `develop`.
 
-## 🤖 Instruções para a IA
+### Convenção de Commits (Conventional Commits)
+- **Formato:** `<tipo>(<escopo>): <descrição imperativa e curta>`
+- **Tipos:** `feat` (MINOR), `fix`/`perf` (PATCH), `docs`, `style`, `refactor`, `test`, `chore`.
+- **Regras:** Commits atômicos, máx. 72 caracteres na 1ª linha. Nunca commite `.env` ou `node_modules`.
 
-1. Gere código compatível com **Spring Boot 3+** (`jakarta.persistence`, etc.).
-2. Prefira soluções nativas do Spring antes de bibliotecas externas.
-3. Ao alterar `application.yml`, especifique qual profile está sendo modificado.
-4. Sempre inclua imports e explique anotações novas.
-5. Se sugerir uma migração de banco, inclua script Flyway/Liquibase ou explique o impacto.
-6. Pare e pergunte antes de modificar configurações de segurança ou transações globais.
-7. **Atue como Revisor de Código:** Ao ler trechos de código enviados, avalie mentalmente as métricas de qualidade (Complexidade Ciclomática, Code Smells e Coesão) e aponte sugestões de refatoração, explicando o "porquê" de forma prática, mas aguarde aprovação para reescrever.
+### Pull Requests
+- Exige CI verde, cobertura ≥ 80%, sem conflitos e ao menos 1 aprovação.
+- Deve conter: O quê, Porquê, Ticket (ANT-XXXX) e Como testar.
 
-## Diretrizes e Regras de Desenvolvimento (Gemini)
+---
 
-Para qualquer interação neste projeto, o assistente deve seguir estritamente as regras abaixo:
+## 💻 4. Qualidade de Código & Padrões
 
-1. **Autorização Prévia para Implementação de Código**:
-    - Não escreva, altere ou exclua qualquer código de produção sem a autorização prévia e explícita do usuário.
-    - Apresente as propostas e soluções, detalhando o impacto nas métricas de qualidade, antes de aplicá-las.
+### Estrutura e Design
+- **Arquitetura:** Package-by-feature + Camadas (Controller → Service → Repository).
+- **Princípios:** SOLID, DRY, alta coesão e baixo acoplamento.
+- **Clean Code:** Baixa complexidade ciclomática. Máximo de **2 níveis de aninhamento** (`if/for`). Use *Early Returns*.
 
-2. **Autorização Prévia para Criação ou Alteração de Testes**:
-    - Não adicione novos testes unitários, de integração ou modifique testes existentes sem autorização explícita do usuário.
+### Boas Práticas Spring
+- **Injeção:** Via construtor (`@RequiredArgsConstructor`).
+- **DTOs:** **NUNCA** exponha `@Entity` no controller. Use `record` para DTOs.
+- **Validação:** `@Valid` no controller + Bean Validation (`@NotBlank`, `@Email`, etc.) nos DTOs.
+- **Erros:** Tratamento global via `@RestControllerAdvice` + `ErrorResponse` padronizado.
+- **Logging:** `@Slf4j` (JSON em produção). Nunca use `System.out.println`.
 
-3. **Autorização Prévia para Commits**:
-    - Não execute comandos do Git para realizar commits (`git commit`) ou enviar alterações (`git push`) sem a autorização prévia e explícita do usuário.
-    - Sempre confirme com o usuário se ele deseja commitar as alterações feitas antes de executar tais comandos.
+---
 
-## Monitoramento de APIs Spring Boot
-- [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html)
-- [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin)
-- [Spring Boot Metrics](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics)
-- [Spring Boot Actuator + Prometheus](https://www.baeldung.com/spring-boot-actuator-prometheus)
-- [Spring Boot Metrics + Prometheus](https://www.baeldung.com/spring-boot-metrics-prometheus)
-- [Prometheus + Grafana](https://www.baeldung.com/prometheus-grafana)
-- [Prometheus + Grafana + Alertmanager](https://www.baeldung.com/prometheus-grafana-alertmanager)
+## 🔒 5. Segurança
+
+- **Secrets:** Variáveis de ambiente ou `application-{profile}.yml` (nunca commitar).
+- **Configuração:** `@Bean SecurityFilterChain` (stateless para APIs).
+- **Autorização:** `@EnableMethodSecurity` + `@PreAuthorize("hasRole('ADMIN')")`.
+- **CORS e Inputs:** Configuração explícita no `WebSecurityConfig` e validação rigorosa de headers/params.
+
+---
+
+## 🧪 6. Estratégia de Testes
+
+*(Lembrete: Só implementar se autorizado)*
+
+- **Frameworks:** JUnit 5, Mockito, Testcontainers (para DB/Redis/Kafka).
+- **Padrão:** AAA (Arrange, Act, Assert).
+- **Cobertura:** Foco em *branch coverage* (preparando para JaCoCo).
+- **Cenários Obrigatórios:** Happy path, validações de erro, 404, 401/403, e rollback de transação.
+- **Integração:** `@SpringBootTest` + `@AutoConfigureMockMvc` + `@Transactional` (rollback automático).
+
+---
+
+## 📚 7. Referências e Links Úteis
+- **Monitoramento:** [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html) | [Prometheus & Grafana](https://www.baeldung.com/prometheus-grafana)
+- **Git Flow:** [Modelo Original (nvie)](https://nvie.com/posts/a-successful-git-branching-model/)
+- **Commits:** [Conventional Commits 1.0](https://www.conventionalcommits.org/)
+- **Versionamento:** [Semantic Versioning 2.0](https://semver.org/)
