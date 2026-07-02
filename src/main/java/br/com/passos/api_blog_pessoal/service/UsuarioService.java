@@ -88,7 +88,7 @@ public class UsuarioService {
     }
 
     private void validarEmailUnico(String email) {
-        if (repository.findByEmail(email).isPresent()) {
+        if (repository.existsByEmail(email)) {
             throw new EmailJaCadastradoException("Email já cadastrado");
         }
     }

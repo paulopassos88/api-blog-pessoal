@@ -9,14 +9,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor<Post> {
-    List<Post> findByAutorId(Long autorId);
 
     Optional<Post> findBySlug(String slug);
+
+    @Query("SELECT COUNT(p) FROM Post p WHERE p.slug = :slug OR p.slug LIKE :slugPrefix")
+    long countBySlugPrefix(String slug, String slugPrefix);
 
     @Query("""
             SELECT new br.com.passos.api_blog_pessoal.dto.PostFeedResponse(

@@ -14,6 +14,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT u FROM Usuario u WHERE u.email = :email")
     Optional<Usuario> findByEmail(String email);
 
+    boolean existsByEmail(String email);
+
     @Query("SELECT u FROM Usuario u WHERE LOWER(u.nome) LIKE LOWER(CONCAT('%', :nome, '%')) ORDER BY u.dataCriacao DESC")
     List<Usuario> findByNomeContainingIgnoreCaseOrderByDataCriacaoDesc(String nome);
 }

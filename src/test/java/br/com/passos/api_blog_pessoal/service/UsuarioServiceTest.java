@@ -67,7 +67,7 @@ class UsuarioServiceTest {
     @Test
     @DisplayName("Deve cadastrar usuário com sucesso")
     void deveCadastrarUsuarioComSucesso() {
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.existsByEmail(anyString())).thenReturn(false);
         when(mapper.toEntity(usuarioRequest)).thenReturn(usuario);
         when(repository.save(any(Usuario.class))).thenReturn(usuario);
         when(mapper.toResponse(usuario)).thenReturn(usuarioResponse);
@@ -82,7 +82,7 @@ class UsuarioServiceTest {
     @Test
     @DisplayName("Deve lançar exceção ao cadastrar email duplicado")
     void deveLancarExcecaoEmailDuplicadoNoCadastro() {
-        when(repository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
+        when(repository.existsByEmail(anyString())).thenReturn(true);
 
         assertThrows(EmailJaCadastradoException.class, () -> service.cadastrar(usuarioRequest));
         verify(repository, never()).save(any(Usuario.class));

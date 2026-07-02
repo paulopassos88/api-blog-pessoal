@@ -82,9 +82,7 @@ public class ComentarioService {
 
     @Transactional(readOnly = true)
     public List<ComentarioResponse> listarPorPost(Long postId) {
-        // Retornar apenas comentários raiz para o feed de comentários
-        return repository.findByPostId(postId).stream()
-                .filter(c -> c.getPai() == null)
+        return repository.findRootByPostId(postId).stream()
                 .map(mapper::toResponse)
                 .collect(Collectors.toList());
     }

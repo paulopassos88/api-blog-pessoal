@@ -158,13 +158,7 @@ public class PostService {
 
     private String gerarSlugUnico(String titulo) {
         String slugBase = SlugUtils.makeSlug(titulo);
-        String slug = slugBase;
-        int count = 1;
-        
-        while (repository.findBySlug(slug).isPresent()) {
-            slug = slugBase + "-" + count++;
-        }
-        
-        return slug;
+        long count = repository.countBySlugPrefix(slugBase, slugBase + "-%");
+        return count == 0 ? slugBase : slugBase + "-" + count;
     }
 }
