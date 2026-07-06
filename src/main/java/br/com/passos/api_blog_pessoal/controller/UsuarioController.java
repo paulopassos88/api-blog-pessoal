@@ -6,6 +6,9 @@ import br.com.passos.api_blog_pessoal.dto.UsuarioUpdateRequest;
 import br.com.passos.api_blog_pessoal.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import br.com.passos.api_blog_pessoal.assembler.UsuarioAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,29 +21,30 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService service;
+    private final UsuarioAssembler assembler;
 
     @PostMapping
-    public ResponseEntity<UsuarioResponse> cadastrar(@RequestBody @Valid UsuarioRequest request) {
+    public ResponseEntity<EntityModel<UsuarioResponse>> cadastrar(@RequestBody @Valid UsuarioRequest request) {
         UsuarioResponse response = service.cadastrar(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(response));
     }
 
     @GetMapping("/busca-por-email")
-    public ResponseEntity<UsuarioResponse> buscarPorEmail(@RequestParam String email) {
-        return ResponseEntity.ok(service.buscarPorEmail(email));
+    public ResponseEntity<EntityModel<UsuarioResponse>> buscarPorEmail(@RequestParam String email) {
+        return ResponseEntity.ok(assembler.toModel(service.buscarPorEmail(email)));
     }
 
     @GetMapping("/busca-por-nome")
-    public ResponseEntity<List<UsuarioResponse>> buscarPorNome(@RequestParam String nome) {
-        return ResponseEntity.ok(service.buscarPorNome(nome));
+    public ResponseEntity<CollectionModel<EntityModel<UsuarioResponse>>> buscarPorNome(@RequestParam String nome) {
+        return ResponseEntity.ok(assembler.toCollectionModel(service.buscarPorNome(nome)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> atualizar(
+    public ResponseEntity<EntityModel<UsuarioResponse>> atualizar(
             @PathVariable Long id,
             @RequestParam Long executorId,
             @RequestBody @Valid UsuarioUpdateRequest request) {
-        return ResponseEntity.ok(service.atualizar(id, executorId, request));
+        return ResponseEntity.ok(assembler.toModel(service.atualizar(id, executorId, request)));
     }
 
     @DeleteMapping("/{id}")

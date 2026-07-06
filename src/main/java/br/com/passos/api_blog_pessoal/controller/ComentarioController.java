@@ -5,6 +5,9 @@ import br.com.passos.api_blog_pessoal.dto.ComentarioResponse;
 import br.com.passos.api_blog_pessoal.service.ComentarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import br.com.passos.api_blog_pessoal.assembler.ComentarioAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,26 +20,27 @@ import java.util.List;
 public class ComentarioController {
 
     private final ComentarioService service;
+    private final ComentarioAssembler assembler;
 
     @PostMapping("/posts/{postId}/comentarios")
-    public ResponseEntity<ComentarioResponse> comentar(
+    public ResponseEntity<EntityModel<ComentarioResponse>> comentar(
             @PathVariable Long postId,
             @RequestParam Long autorId,
             @RequestBody @Valid ComentarioRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.comentar(postId, autorId, request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(service.comentar(postId, autorId, request)));
     }
 
     @GetMapping("/posts/{postId}/comentarios")
-    public ResponseEntity<List<ComentarioResponse>> listar(@PathVariable Long postId) {
-        return ResponseEntity.ok(service.listarPorPost(postId));
+    public ResponseEntity<CollectionModel<EntityModel<ComentarioResponse>>> listar(@PathVariable Long postId) {
+        return ResponseEntity.ok(assembler.toCollectionModel(service.listarPorPost(postId)));
     }
 
     @PostMapping("/comentarios/{id}/respostas")
-    public ResponseEntity<ComentarioResponse> responder(
+    public ResponseEntity<EntityModel<ComentarioResponse>> responder(
             @PathVariable Long id,
             @RequestParam Long autorId,
             @RequestBody @Valid ComentarioRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.responder(id, autorId, request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(service.responder(id, autorId, request)));
     }
 
     @PostMapping("/comentarios/{id}/curtir")
