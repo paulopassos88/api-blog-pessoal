@@ -20,6 +20,8 @@
    - Só implemente testes se o usuário solicitar explicitamente.
 6. **Entregáveis:** 
    - Sempre inclua imports, explique anotações novas e, ao sugerir migrações de banco, inclua scripts Flyway/Liquibase.
+7. **Atualização Contínua de Especificações (`doc/spec`):**
+   - **SEMPRE** que o código for alterado (entidades, regras de negócio, DTOs, endpoints, banco ou infraestrutura) e **OBRIGATORIAMENTE antes de qualquer commit**, atualize os arquivos de especificação correspondentes (`dock/spec/<modulo>/spec.md`) e o arquivo consolidado mestre (`dock/spec/spec.md`).
 
 ---
 
@@ -39,6 +41,7 @@
 ### 🛑 A Regra de Ouro
 > **NUNCA faça commits diretos na `main` ou `master`.** Toda alteração chega via Pull Request (PR).
 > **Só fazer commits quando for solicitado.**
+> **Antes de qualquer commit:** Atualize obrigatoriamente as especificações em `dock/spec/` caso o código tenha sido modificado.
 
 ### Topologia Simplificada
 - `main`: Espelho da produção estável.
