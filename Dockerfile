@@ -8,8 +8,8 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 
-# Dá permissão de execução ao gradlew e baixa as dependências (cache)
-RUN ./gradlew dependencies --no-daemon
+# Garante permissão de execução e pré-aquece o cache de dependências
+RUN chmod +x gradlew && ./gradlew dependencies --no-daemon
 
 # Copia o código fonte e gera o jar
 COPY src src
