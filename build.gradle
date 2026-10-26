@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'org.springframework.boot' version '3.5.14'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -9,7 +10,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(25)
 	}
 }
 
@@ -48,6 +49,38 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
+// Testes unitários: rápidos, sem dependência de Docker (exclui *IT)
 tasks.named('test') {
+	description = 'Executa os testes unitários (sem Docker).'
 	useJUnitPlatform()
+	exclude '**/*IT.class'
+}
+
+// Testes de integração: sobem PostgreSQL real via Testcontainers (requer Docker)
+tasks.register('integrationTest', Test) {
+	description = 'Executa os testes de integração com Testcontainers (requer Docker).'
+	group = 'verification'
+	testClassesDirs = sourceSets.test.output.classesDirs
+	classpath = sourceSets.test.runtimeClasspath
+	useJUnitPlatform()
+	include '**/*IT.class'
+	shouldRunAfter tasks.named('test')
+}
+
+tasks.named('check') {
+	dependsOn tasks.named('integrationTest')
+}
+
+// Relatório de cobertura agregado (unitários + integração)
+jacoco {
+	toolVersion = '0.8.14'
+}
+
+tasks.named('jacocoTestReport', JacocoReport) {
+	executionData.setFrom(fileTree(layout.buildDirectory.dir('jacoco')).include('*.exec'))
+	reports {
+		xml.required = true
+		html.required = true
+	}
+	mustRunAfter tasks.named('test'), tasks.named('integrationTest')
 }
